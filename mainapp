@@ -1,0 +1,30 @@
+import java.util.List;
+
+public class MainApp {
+    public static void main(String[] args) {
+
+        // 1️⃣ Insert sample data (only once)
+        // InsertData.insertData(InsertData.insertInClass());
+        // System.out.println("Sample data inserted successfully!\n");
+
+        // 2️⃣ Get all products
+        List<ProductsData> allProducts = ProductService.getAllProducts();
+        System.out.println("=== ALL PRODUCTS ===");
+        allProducts.forEach(p -> System.out.println(p.getId() + " - " + p.getTitle() + " | " + p.getCategory()));
+
+        // 3️⃣ Get products by category
+        List<ProductsData> beautyProducts = ProductService.getProductsByCategory("beauty");
+        System.out.println("\n=== BEAUTY PRODUCTS ===");
+        beautyProducts.forEach(p -> System.out.println(p.getTitle() + " - ₹" + p.getPrice()));
+
+        // 4️⃣ Filter by price range
+        List<ProductsData> priceFiltered = ProductService.filterByPriceRange(100, 700);
+        System.out.println("\n=== PRODUCTS BETWEEN ₹100 and ₹700 ===");
+        priceFiltered.forEach(p -> System.out.println(p.getTitle() + " - ₹" + p.getPrice()));
+
+        // 5️⃣ Get by brand
+        List<ProductsData> brandProducts = ProductService.getProductsByBrand("Sony");
+        System.out.println("\n=== SONY PRODUCTS ===");
+        brandProducts.forEach(p -> System.out.println(p.getTitle() + " - Rating: " + p.getRating()));
+    }
+}
