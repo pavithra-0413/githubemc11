@@ -1,0 +1,99 @@
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductService {
+
+    // Get all products
+    public static List<ProductsData> getAllProducts() {
+        List<ProductsData> products = new ArrayList<>();
+        String query = "SELECT * FROM products_data";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                ProductsData p = extractProduct(rs);
+                products.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // Get products by category
+    public static List<ProductsData> getProductsByCategory(String category) {
+        List<ProductsData> products = new ArrayList<>();
+        String query = "SELECT * FROM products_data WHERE category = ?";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, category);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                products.add(extractProduct(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // Filter by price range
+    public static List<ProductsData> filterByPriceRange(double minPrice, double maxPrice) {
+        List<ProductsData> products = new ArrayList<>();
+        String query = "SELECT * FROM products_data WHERE price BETWEEN ? AND ?";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setDouble(1, minPrice);
+            ps.setDouble(2, maxPrice);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                products.add(extractProduct(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // Filter by brand
+    public static List<ProductsData> getProductsByBrand(String brand) {
+        List<ProductsData> products = new ArrayList<>();
+        String query = "SELECT * FROM products_data WHERE brand = ?";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, brand);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                products.add(extractProduct(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    // Utility method to map result set → object
+    private static ProductsData extractProduct(ResultSet rs) throws SQLException {
+        ProductsData p = new ProductsData();
+        p.setId(rs.getInt("id"));
+        p.setTitle(rs.getString("title"));
+        p.setDescription(rs.getString("description"));
+        p.setCategory(rs.getString("category"));
+        p.setPrice(rs.getDouble("price"));
+        p.setDiscountPercentage(rs.getDouble("discount_percentage"));
+        p.setRating(rs.getDouble("rating"));
+        p.setStock(rs.getInt("stock"));
+        p.setBrand(rs.getString("brand"));
+        p.setSku(rs.getString("sku"));
+        p.setWeight(rs.getInt("weight"));
