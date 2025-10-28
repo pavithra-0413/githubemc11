@@ -1,0 +1,99 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.List;
+
+public class FurnitureProductsInsert {
+
+    public static List<ProductsData> insertInClass(){
+        ProductsData chair = new ProductsData();
+        chair.setId(10);
+        chair.setTitle("Ergonomic Office Chair");
+        chair.setDescription("Comfortable office chair with adjustable height, lumbar support, and breathable mesh back.");
+        chair.setCategory("furniture");
+        chair.setPrice(129.99);
+        chair.setDiscountPercentage(8.0);
+        chair.setRating(4.6);
+        chair.setStock(60);
+        chair.setBrand("Duraflex");
+        chair.setSku("FUR-DUR-CHA-010");
+        chair.setWeight(12000);
+        chair.setWarrantyInformation("1 Year Warranty");
+        chair.setShippingInformation("Ships in 4-6 business days");
+        chair.setAvailabilityStatus("In Stock");
+        chair.setReturnPolicy("10-day return policy");
+        chair.setMinimumOrderQuantity(1);
+        chair.setThumbnail("https://cdn.dummyjson.com/product-images/furniture/chair/thumbnail.webp");
+
+        ProductsData table = new ProductsData();
+        table.setId(11);
+        table.setTitle("Wooden Dining Table");
+        table.setDescription("Classic 6-seater wooden dining table made from premium teak wood with polished finish.");
+        table.setCategory("furniture");
+        table.setPrice(499.99);
+        table.setDiscountPercentage(12.0);
+        table.setRating(4.8);
+        table.setStock(30);
+        table.setBrand("RoyalWood");
+        table.setSku("FUR-ROY-TAB-011");
+        table.setWeight(30000);
+        table.setWarrantyInformation("2 Year Warranty");
+        table.setShippingInformation("Ships in 5-7 business days");
+        table.setAvailabilityStatus("In Stock");
+        table.setReturnPolicy("7-day replacement policy");
+        table.setMinimumOrderQuantity(1);
+        table.setThumbnail("https://cdn.dummyjson.com/product-images/furniture/table/thumbnail.webp");
+
+        ProductsData sofa = new ProductsData();
+        sofa.setId(12);
+        sofa.setTitle("3-Seater Leather Sofa");
+        sofa.setDescription("Premium brown leather sofa with deep cushions and modern design, perfect for living rooms.");
+        sofa.setCategory("furniture");
+        sofa.setPrice(899.99);
+        sofa.setDiscountPercentage(10.5);
+        sofa.setRating(4.7);
+        sofa.setStock(25);
+        sofa.setBrand("UrbanStyle");
+        sofa.setSku("FUR-URB-SOF-012");
+        sofa.setWeight(40000);
+        sofa.setWarrantyInformation("3 Year Warranty");
+        sofa.setShippingInformation("Ships in 6-8 business days");
+        sofa.setAvailabilityStatus("In Stock");
+        sofa.setReturnPolicy("15-day return policy");
+        sofa.setMinimumOrderQuantity(1);
+        sofa.setThumbnail("https://cdn.dummyjson.com/product-images/furniture/sofa/thumbnail.webp");
+
+        return Arrays.asList(chair, table, sofa);
+    }
+
+    public static void insertData(List<ProductsData> ListProducts){
+        try (Connection conn = dbConnection.getConnection()){
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO products_data(title, description, category, price, discount_percentage, rating, stock, brand, sku, weight, warranty_information, shipping_information, availability_status, return_policy, minimum_order_quantity, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            for (ProductsData product : ListProducts) {
+                ps.setString(1, product.getTitle());
+                ps.setString(2, product.getDescription());
+                ps.setString(3, product.getCategory());
+                ps.setDouble(4, product.getPrice());
+                ps.setDouble(5, product.getDiscountPercentage());
+                ps.setDouble(6, product.getRating());
+                ps.setInt(7, product.getStock());
+                ps.setString(8, product.getBrand());
+                ps.setString(9, product.getSku());
+                ps.setDouble(10, product.getWeight());
+                ps.setString(11, product.getWarrantyInformation());
+                ps.setString(12, product.getShippingInformation());
+                ps.setString(13, product.getAvailabilityStatus());
+                ps.setString(14, product.getReturnPolicy());
+                ps.setInt(15, product.getMinimumOrderQuantity());
+                ps.setString(16, product.getThumbnail());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            System.out.println("Furniture batch insert completed successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
