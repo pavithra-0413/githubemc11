@@ -1,0 +1,99 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Arrays;
+import java.util.List;
+
+public class GroceryProductsInsert {
+
+    public static List<ProductsData> insertInClass(){
+        ProductsData rice = new ProductsData();
+        rice.setId(7);
+        rice.setTitle("India Gate Basmati Rice");
+        rice.setDescription("Premium long-grain basmati rice with rich aroma and superior taste.");
+        rice.setCategory("grocery");
+        rice.setPrice(22.99);
+        rice.setDiscountPercentage(5.0);
+        rice.setRating(4.3);
+        rice.setStock(200);
+        rice.setBrand("India Gate");
+        rice.setSku("GRO-IND-RIC-007");
+        rice.setWeight(5000);
+        rice.setWarrantyInformation("No warranty");
+        rice.setShippingInformation("Ships in 2 business days");
+        rice.setAvailabilityStatus("In Stock");
+        rice.setReturnPolicy("Non-returnable");
+        rice.setMinimumOrderQuantity(2);
+        rice.setThumbnail("https://cdn.dummyjson.com/product-images/grocery/rice/thumbnail.webp");
+
+        ProductsData oil = new ProductsData();
+        oil.setId(8);
+        oil.setTitle("Fortune Sunflower Oil");
+        oil.setDescription("Refined sunflower oil enriched with vitamins for a healthy cooking experience.");
+        oil.setCategory("grocery");
+        oil.setPrice(15.49);
+        oil.setDiscountPercentage(3.0);
+        oil.setRating(4.2);
+        oil.setStock(180);
+        oil.setBrand("Fortune");
+        oil.setSku("GRO-FOR-OIL-008");
+        oil.setWeight(1000);
+        oil.setWarrantyInformation("No warranty");
+        oil.setShippingInformation("Ships in 3 business days");
+        oil.setAvailabilityStatus("In Stock");
+        oil.setReturnPolicy("No return policy");
+        oil.setMinimumOrderQuantity(3);
+        oil.setThumbnail("https://cdn.dummyjson.com/product-images/grocery/oil/thumbnail.webp");
+
+        ProductsData coffee = new ProductsData();
+        coffee.setId(9);
+        coffee.setTitle("Nescafe Gold Coffee");
+        coffee.setDescription("Rich and smooth instant coffee made from high-quality Arabica beans.");
+        coffee.setCategory("grocery");
+        coffee.setPrice(8.99);
+        coffee.setDiscountPercentage(6.5);
+        coffee.setRating(4.7);
+        coffee.setStock(150);
+        coffee.setBrand("Nescafe");
+        coffee.setSku("GRO-NES-COF-009");
+        coffee.setWeight(200);
+        coffee.setWarrantyInformation("No warranty");
+        coffee.setShippingInformation("Ships in 2 business days");
+        coffee.setAvailabilityStatus("In Stock");
+        coffee.setReturnPolicy("Non-returnable");
+        coffee.setMinimumOrderQuantity(2);
+        coffee.setThumbnail("https://cdn.dummyjson.com/product-images/grocery/coffee/thumbnail.webp");
+
+        return Arrays.asList(rice, oil, coffee);
+    }
+
+    public static void insertData(List<ProductsData> ListProducts){
+        try (Connection conn = dbConnection.getConnection()){
+            PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO products_data(title, description, category, price, discount_percentage, rating, stock, brand, sku, weight, warranty_information, shipping_information, availability_status, return_policy, minimum_order_quantity, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            for (ProductsData product : ListProducts) {
+                ps.setString(1, product.getTitle());
+                ps.setString(2, product.getDescription());
+                ps.setString(3, product.getCategory());
+                ps.setDouble(4, product.getPrice());
+                ps.setDouble(5, product.getDiscountPercentage());
+                ps.setDouble(6, product.getRating());
+                ps.setInt(7, product.getStock());
+                ps.setString(8, product.getBrand());
+                ps.setString(9, product.getSku());
+                ps.setDouble(10, product.getWeight());
+                ps.setString(11, product.getWarrantyInformation());
+                ps.setString(12, product.getShippingInformation());
+                ps.setString(13, product.getAvailabilityStatus());
+                ps.setString(14, product.getReturnPolicy());
+                ps.setInt(15, product.getMinimumOrderQuantity());
+                ps.setString(16, product.getThumbnail());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+            System.out.println("Grocery batch insert completed successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
